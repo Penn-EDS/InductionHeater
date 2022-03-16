@@ -62,9 +62,12 @@ delay(300);
 }
 
 void SetTime(){
+  //
+  //Set time on
+  //
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Time in Seconds : ");
+    lcd.print("Time ON in Sec:");
     lcd.setCursor(0,1);
     lcd.print(timeon);
     lcd.setCursor(0,2);
@@ -82,7 +85,7 @@ void SetTime(){
     }
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Time in Seconds : ");
+    lcd.print("Time ON in Seconds:");
     lcd.setCursor(0,1);
     lcd.print(timeon);
     lcd.setCursor(0,2);
@@ -98,7 +101,7 @@ void SetTime(){
     }
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Time in Seconds : ");
+    lcd.print("Time ON in Seconds:");
     lcd.setCursor(0,1);
     lcd.print(timeon);
     lcd.setCursor(0,2);
@@ -107,6 +110,128 @@ void SetTime(){
     lcd.print("Press C to Continue");
   }
 }
-timeonmillis=timeon*1000;
+
+while(digitalRead(ButtonC)==LOW){} //Crude debouncing
+delay(200);
+//
+//Set time off
+//
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Time OFF in Sec:");
+    lcd.setCursor(0,1);
+    lcd.print(timeoff);
+    lcd.setCursor(0,2);
+    lcd.print("Press: A(+) , B(-)");
+    lcd.setCursor(0,3);
+    lcd.print("Press C to Continue");
+    
+  while(digitalRead(ButtonC)==HIGH){
+    delay(20);
+  if(digitalRead(ButtonA)==LOW){
+    timeoff=timeoff + 1;
+    if(timeoff>=30){  //Set maximum time coil will be off
+      timeoff=30;
+    }
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Time OFF in Seconds:");
+    lcd.setCursor(0,1);
+    lcd.print(timeoff);
+    lcd.setCursor(0,2);
+    lcd.print("Press: A(+) , B(-)");
+    lcd.setCursor(0,3);
+    lcd.print("Press C to Continue");
+  }
+    
+  if(digitalRead(ButtonB)==LOW){
+   timeoff=timeoff-1;
+   if(timeoff <= 15){ //Set minimum time coil will be off
+      timeoff = 15;
+    }
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Time OFF in Seconds:");
+    lcd.setCursor(0,1);
+    lcd.print(timeoff);
+    lcd.setCursor(0,2);
+    lcd.print("Press: A(+) , B(-)");
+    lcd.setCursor(0,3);
+    lcd.print("Press C to Continue");
+  }
+}
+
+while(digitalRead(ButtonC)==LOW){} //Crude Debouncing
+delay(200);
+//
+//Set Cycles
+//
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Cycles:");
+    lcd.setCursor(0,1);
+    lcd.print(cyclesOn);
+    lcd.setCursor(0,2);
+    lcd.print("Press: A(+) , B(-)");
+    lcd.setCursor(0,3);
+    lcd.print("Press C to Continue");
+    
+  while(digitalRead(ButtonC)==HIGH){
+    delay(20);
+  if(digitalRead(ButtonA)==LOW){
+    cyclesOn = cyclesOn + 1;
+    if(cyclesOn >= 5){  //Set maximum number of cycles
+      cyclesOn = 5;
+    }
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Cycles:");
+    lcd.setCursor(0,1);
+    lcd.print(cyclesOn);
+    lcd.setCursor(0,2);
+    lcd.print("Press: A(+) , B(-)");
+    lcd.setCursor(0,3);
+    lcd.print("Press C to Continue");
+  }
+    
+  if(digitalRead(ButtonB)==LOW){
+   cyclesOn = cyclesOn - 1;
+   if(cyclesOn <= 1){ //Set minimum number of cycles
+      cyclesOn = 1;
+    }
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Cycles:");
+    lcd.setCursor(0,1);
+    lcd.print(cyclesOn);
+    lcd.setCursor(0,2);
+    lcd.print("Press: A(+) , B(-)");
+    lcd.setCursor(0,3);
+    lcd.print("Press C to Continue");
+  }
+}
+
+EEPROM.update(addressON, timeon);
+EEPROM.update(addressOFF, timeoff);
+EEPROM.update(addressCycles, cyclesOn);
+
+timeonmillis = timeon * 1000;
+timeoffmillis = timeoff * 1000;
+totalTimeMin = ((timeon + timeoff) * cyclesOn) / 60;
+totalTimeSec = ((timeon + timeoff) * cyclesOn) - (totalTimeMin * 60);
+
+while(digitalRead(ButtonC)==LOW){} //Crude Debouncing
 delay(300);
+}
+
+void elapsedTimeCode(){
+  elapsedMin = timeonsec / 60;
+  elapsedSec = timeonsec - (elapsedMin*60);
+  lcd.print(elapsedMin);
+  lcd.setCursor(2,2);
+  lcd.print("Min");
+  lcd.setCursor(6,2);
+  lcd.print(elapsedSec);
+  lcd.setCursor(9,2);
+  lcd.print("Sec");
 }
