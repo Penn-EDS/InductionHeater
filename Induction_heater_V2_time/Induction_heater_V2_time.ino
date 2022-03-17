@@ -3,12 +3,14 @@
 // the total time of operation by means of number of cycles.
 //
 // Original Author: Alexander Santos (Nov 12, 2020 Build)
-// Rev 1.1 Author: Pedro Quijano
-// Date : March 16, 2022
+// Rev 1.1.1 Author: Pedro Quijano
+// Date : March 17, 2022
 //
-// Rev 1.1: Enabled setting of ON and OFF times, and cycle number.
-//          Values chosen are stored on the EEPROM
-// Rev 1.0: Original Code (was before adopting version control)
+// Rev 1.1.1: Fixed a line of code that incorectly displayed elapsed time after
+//            cancelling run during OFF cycle.
+// Rev 1.1:   Enabled setting of ON and OFF times, and cycle number.
+//            Values chosen are stored on the EEPROM
+// Rev 1.0:   Original Code (was before adopting version control)
 //
 
 #include <Wire.h>
@@ -141,7 +143,7 @@ while(1){
         lcd.setCursor(0,1);
         lcd.print("Elapsed Time:");
         lcd.setCursor(0,2);
-        timeonsec=(((millis()-Time)/1000) + (timeon*cyclesRun) + (timeoff* (cyclesRun)));
+        timeonsec=(((millis()-Time)/1000) + (timeon * cyclesRun) + (timeoff* cyclesRun));
         elapsedTimeCode();
         lcd.setCursor(0,3);
         lcd.print("Press D to Cancel");
@@ -157,7 +159,7 @@ while(1){
       lcd.setCursor(0,1);
       lcd.print("Elapsed Time:");
       lcd.setCursor(0,2);
-      timeonsec = timeonsec + timeon*(cyclesRun) + timeoff*(cyclesRun);
+      timeonsec = timeonsec + (timeon*(cyclesRun)) + (timeoff*(cyclesRun));
       elapsedTimeCode();
       lcd.setCursor(0,3);
       lcd.print("Press C to Continue");
@@ -201,7 +203,7 @@ while(1){
       lcd.setCursor(0,1);
       lcd.print("Elapsed Time:");
       lcd.setCursor(0,2);
-      timeonsec = timeonsec + timeon*(cyclesRun) + timeoff*(cyclesRun - 1);
+      timeonsec = timeonsec + (timeon * (cyclesRun + 1)) + (timeoff * (cyclesRun));
       elapsedTimeCode();
       lcd.setCursor(0,3);
       lcd.print("Press C to Continue");
